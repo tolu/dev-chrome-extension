@@ -5,19 +5,27 @@ chrome.storage.sync.get(({resCacheHeaders}) => {
       { name: 'x-nrk-outputcache-hit', label: 'output cache'},
       { name: 'x-cache', label: 'akamai' }
     ].map(({name, label}) => {
-      const header = resCacheHeaders.find(h => h.name === name);
+      const { value } = resCacheHeaders.find(h => h.name === name) || {};
       return {
-        style: getStyle(!!header),
+        style: getStyle({label, value}),
         label,
-        value: header?.value
+        value,
       }
     });
     waitForBody(() => renderCacheHeaderOverlay(res));
   }
 });
 
-const getStyle = (flag) => {
-  return `style="color: ${flag ? 'lightgreen' : 'orangered'};"`;
+const getStyle = ({label, value}) => {
+  let idx = 2;
+  if (value && label === 'akamai') {
+    idx = /_HIT/.test(value) ? 0 : 1;
+  }
+  if (label !== 'akamai') {
+    idx = !!value ? 0 : 1;
+  }
+  const color = ['lightgreen', 'orangered', 'yellow'][idx];
+  return `style="color: ${color};"`;
 }
 
 const join = (arr, fn) => {
