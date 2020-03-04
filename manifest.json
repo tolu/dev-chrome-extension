@@ -1,0 +1,24 @@
+{
+  "name": "NRK Cache Debugger",
+  "version": "1.0",
+  "description": "Debug cache headers from entire stack",
+  "permissions": [
+    "https://*.nrk.no/",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "storage"
+  ],
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["nrk-cache-debugger-bg.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.nrk.no/*"],
+      "run_at": "document_idle",
+      // "run_at": "document_end",
+      "js": ["nrk-cache-debugger.js"]
+    }
+  ]
+}
