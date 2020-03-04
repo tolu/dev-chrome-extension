@@ -1,22 +1,53 @@
-chrome.storage.sync.get(({resCacheHeaders}) => {
-  const cacheHeaders = resCacheHeaders || [];
-  console.log("ToLu: content script", {cacheHeaders});
-  const res = [
-    { name: 'x-nrk-outputcache-hit', label: 'output cache'},
-    { name: 'x-cache', label: 'akamai' },
-    { name: 'cache-control', label: 'cache-control' }
-  ].map(({name, label}) => {
-    const { value } = cacheHeaders.find(h => h.name === name) || {};
-    return {
-      style: getStyle({label, value}),
-      label: `${name}: ${value}`,
-      value
+const waitForBody = (cb) => {
+  const i = setInterval(() => {
+    if (document.body) {
+      clearInterval(i);
+      cb();
     }
+  }, 25);
+}
+const log = (...args) => {
+  let logArgs;
+  if (/%c/.test(args[0] || '')) {
+    const uno = args.shift();
+    logArgs = [`%c[ToluExtension]\t${uno}`, 'color: hotpink', ...args];
+  } else {
+    logArgs = ['%c[ToluExtension]\t', 'color: hotpink', ...args]
+  }
+  console.log(...logArgs);
+}
+// ENTRY POINT
+waitForBody(() => {
+  // log program id
+  chrome.storage.sync.get(({programId}) => {
+    try {
+      const prfId = programId || document.querySelector('[data-program-id]').getAttribute('data-program-id');
+      if (prfId) {
+        log('%cPRF_ID: %s', 'font-weight: 900', prfId);
+      }
+    } catch { /* eat errors */ }
   });
-  waitForBody(() => renderCacheHeaderOverlay(res));
+  // log cache headers
+  chrome.storage.sync.get(({resCacheHeaders}) => {
+    const cacheHeaders = resCacheHeaders || [];
+    const res = [
+      { name: 'x-nrk-outputcache-hit', label: 'output cache'},
+      { name: 'x-cache', label: 'akamai' },
+      { name: 'cache-control', label: 'cache-control' }
+    ].map(({name, label}) => {
+      const { value } = cacheHeaders.find(h => h.name === name) || {};
+      return {
+        style: getColor({label, value}),
+        name,
+        value
+      }
+    });
+    // @ts-ignore
+    log(join(res, r => `%c\n${r.name}: %c${r.value}`), ...res.flatMap(r => ['', r.style]));
+  });
 });
 
-const getStyle = ({label, value}) => {
+const getColor = ({label, value}) => {
   let idx = 2;
   if (value && label === 'akamai') {
     idx = /_HIT/.test(value) ? 0 : 1;
@@ -25,34 +56,9 @@ const getStyle = ({label, value}) => {
     idx = !!value ? 0 : 1;
   }
   const color = ['lightgreen', 'orangered', 'yellow'][idx];
-  return `style="color: ${color};"`;
+  return `color: ${color};`;
 }
 
 const join = (arr, fn) => {
   return arr.map(fn).join('');
-}
-
-const waitForBody = (cb) => {
-  const sw = Date.now();
-  const i = setInterval(() => document.body ? done() : null, 25);
-  const done = () => {
-    console.log('waited for body', Date.now() - sw);
-    clearInterval(i);
-    cb();
-  }
-}
-
-const renderCacheHeaderOverlay = (res) => {
-  document.body.insertAdjacentHTML('beforeend', /*html*/`
-    <div style="position: absolute; top:0; right: 0; z-index:99999;">
-      <div style="padding: 10px; background: rgba(0,0,0,0.2); color: white; font: sans-serif">
-        <h4 style="margin:0;">Cache Debugger</h4>
-        <ul style="padding:5px; margin:0; list-style: none;">
-          ${ join(res, r => /*html*/`
-            <li ${r.style} title="${r.value}" >${r.label}</li>
-          `)}
-        </ul>
-      </div>
-    </div>
-  `)
 }

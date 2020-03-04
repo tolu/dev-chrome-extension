@@ -28,10 +28,17 @@ chrome.webRequest.onHeadersReceived.addListener(
       .filter(h => headerNames.includes(h.name))
       .map(h => ({ name: h.name, value: h.value }));
     // store so content script can paint result
+    chrome.storage.sync.remove(['resCacheHeaders', 'programId']);
     if (headers.length) {
       chrome.storage.sync.set({resCacheHeaders: headers}, () => {
         console.log("Stored headers.");
       });
+    }
+    if (/\/serie|program\//.test(url)) {
+      const programId = responseHeaders.find(h => h.name === 'x-nrk-program-id');
+      if (programId) {
+        chrome.storage.sync.set({programId: programId.value});
+      }
     }
   },
   { urls: ["<all_urls>"], types: ["main_frame"] },
