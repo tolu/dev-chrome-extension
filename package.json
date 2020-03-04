@@ -1,8 +1,8 @@
 {
-  "name": "nrk-cache-debug",
+  "name": "tolu-chrome-extension",
   "version": "1.0.0",
   "description": "",
-  "main": "nrk-cache-debugger.js",
+  "main": "tolu-extension-background.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

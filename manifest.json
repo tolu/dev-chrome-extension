@@ -1,7 +1,7 @@
 {
-  "name": "NRK Cache Debugger",
+  "name": "Tolu Dev Extension",
   "version": "1.0",
-  "description": "Debug cache headers from entire stack",
+  "description": "Test extension development, high and low",
   "permissions": [
     "https://*.nrk.no/",
     "activeTab",
@@ -11,14 +11,13 @@
   ],
   "manifest_version": 2,
   "background": {
-    "scripts": ["nrk-cache-debugger-bg.js"]
+    "scripts": ["tolu-extension-background.js"]
   },
   "content_scripts": [
     {
       "matches": ["https://*.nrk.no/*"],
-      "run_at": "document_idle",
-      // "run_at": "document_end",
-      "js": ["nrk-cache-debugger.js"]
+      "run_at": "document_start",
+      "js": ["tolu-extension.js"]
     }
   ]
 }
