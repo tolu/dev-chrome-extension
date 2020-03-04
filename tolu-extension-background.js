@@ -19,6 +19,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 chrome.webRequest.onHeadersReceived.addListener(
   ({url, responseHeaders}) => {
     const headerNames = [
+      'cache-control',
       'x-nrk-outputcache-hit',
       'x-cache',
       'x-cache-key'

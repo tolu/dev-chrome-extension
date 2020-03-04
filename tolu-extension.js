@@ -1,19 +1,19 @@
 chrome.storage.sync.get(({resCacheHeaders}) => {
-  console.log("Inside content script.", {resCacheHeaders});
-  if (resCacheHeaders) {
-    const res = [
-      { name: 'x-nrk-outputcache-hit', label: 'output cache'},
-      { name: 'x-cache', label: 'akamai' }
-    ].map(({name, label}) => {
-      const { value } = resCacheHeaders.find(h => h.name === name) || {};
-      return {
-        style: getStyle({label, value}),
-        label,
-        value
-      }
-    });
-    waitForBody(() => renderCacheHeaderOverlay(res));
-  }
+  const cacheHeaders = resCacheHeaders || [];
+  console.log("ToLu: content script", {cacheHeaders});
+  const res = [
+    { name: 'x-nrk-outputcache-hit', label: 'output cache'},
+    { name: 'x-cache', label: 'akamai' },
+    { name: 'cache-control', label: 'cache-control' }
+  ].map(({name, label}) => {
+    const { value } = cacheHeaders.find(h => h.name === name) || {};
+    return {
+      style: getStyle({label, value}),
+      label: `${name}: ${value}`,
+      value
+    }
+  });
+  waitForBody(() => renderCacheHeaderOverlay(res));
 });
 
 const getStyle = ({label, value}) => {
