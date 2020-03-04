@@ -15,7 +15,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.nrk.no/*"],
+      "matches": [
+        "https://tv.nrk.no/*",
+        "https://tv.dev.nrk.no/*",
+        "https://tv-preprod.nrk.no/*"
+      ],
       "run_at": "document_start",
       "js": ["tolu-extension.js"]
     }

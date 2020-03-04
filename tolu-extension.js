@@ -9,7 +9,7 @@ chrome.storage.sync.get(({resCacheHeaders}) => {
       return {
         style: getStyle({label, value}),
         label,
-        value,
+        value
       }
     });
     waitForBody(() => renderCacheHeaderOverlay(res));
