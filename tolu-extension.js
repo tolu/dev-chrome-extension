@@ -23,7 +23,7 @@ waitForBody(() => {
     try {
       const prfId = programId || document.querySelector('[data-program-id]').getAttribute('data-program-id');
       if (prfId) {
-        log('%cPRF_ID: %s', 'font-weight: 900', prfId);
+        log('%cPRF_ID: %s', 'font-weight: 900; color: yellow; background: black; padding: 3px 5px;', prfId);
       }
     } catch { /* eat errors */ }
   });
@@ -56,7 +56,7 @@ const getColor = ({label, value}) => {
     idx = !!value ? 0 : 1;
   }
   const color = ['lightgreen', 'orangered', 'yellow'][idx];
-  return `color: ${color};`;
+  return `color: ${color}; background: black`;
 }
 
 const join = (arr, fn) => {
