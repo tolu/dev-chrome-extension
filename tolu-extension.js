@@ -32,7 +32,9 @@ waitForBody(() => {
     const cacheHeaders = resCacheHeaders || [];
     const res = [
       { name: 'x-nrk-outputcache-hit', label: 'output cache'},
+      { name: 'x-nrk-cache', label: 'output cache'},
       { name: 'x-cache', label: 'akamai' },
+      { name: 'x-cache-key', label: 'akamai' },
       { name: 'cache-control', label: 'cache-control' }
     ].map(({name, label}) => {
       const { value } = cacheHeaders.find(h => h.name === name) || {};
@@ -43,7 +45,12 @@ waitForBody(() => {
       }
     });
     // @ts-ignore
-    log(join(res, r => `%c\n${r.name}: %c${r.value}`), ...res.flatMap(r => ['', r.style]));
+    console.group(`%c[ToluExtension] %cCache Header Report:`, 'color: hotpink', '');
+    console.table(res.reduce((p, n) => {
+      p[n.name] = n.value;
+      return p;
+    }, {}));
+    console.groupEnd();
   });
 });
 
