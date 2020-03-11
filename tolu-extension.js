@@ -37,17 +37,23 @@ waitForBody(() => {
       { name: 'x-cache-key', label: 'akamai' },
       { name: 'cache-control', label: 'cache-control' }
     ].map(({name, label}) => {
-      const { value } = cacheHeaders.find(h => h.name === name) || {};
+      const values = cacheHeaders.filter(h => h.name === name).map(h => h.value) || [];
       return {
-        style: getColor({label, value}),
+        style: getColor({label, value: values[0]}),
         name,
-        value
+        values
       }
     });
     // @ts-ignore
     console.group(`%c[ToluExtension] %cCache Header Report:`, 'color: hotpink', '');
     console.table(res.reduce((p, n) => {
-      p[n.name] = n.value;
+      if (n.values.length > 1) {
+        n.values.forEach((value, idx) => {
+          p[`${idx+1}: ${n.name}`] = value;
+        });
+      } else {
+        p[n.name] = n.values[0];
+      }
       return p;
     }, {}));
     console.groupEnd();

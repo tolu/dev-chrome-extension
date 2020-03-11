@@ -32,7 +32,7 @@ chrome.webRequest.onHeadersReceived.addListener(
     chrome.storage.sync.remove(['resCacheHeaders', 'programId']);
     if (headers.length) {
       chrome.storage.sync.set({resCacheHeaders: headers}, () => {
-        console.log("Stored headers.");
+        console.log("Stored headers.", headers);
       });
     }
     if (/\/serie|program\//.test(url)) {
