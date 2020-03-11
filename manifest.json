@@ -4,6 +4,7 @@
   "description": "Test extension development, high and low",
   "permissions": [
     "https://*.nrk.no/",
+    "https://atv-legacy-preprod-we.azurewebsites.net/",
     "activeTab",
     "webRequest",
     "webRequestBlocking",
@@ -16,6 +17,7 @@
   "content_scripts": [
     {
       "matches": [
+        "https://atv-legacy-preprod-we.azurewebsites.net/*",
         "https://atv.dev.nrk.no/*",
         "https://atv-preprod.nrk.no/*",
         "https://atv.nrk.no/*",

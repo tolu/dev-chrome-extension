@@ -37,9 +37,7 @@ waitForBody(() => {
       { name: 'x-nrk-ec', label: 'edge ctrl headers'},
       { name: 'x-cache', label: 'akamai' },
       { name: 'x-cache-key', label: 'akamai' },
-      { name: 'cache-control', label: 'cache-control' },
-      { name: 'edge-control', label: 'edge-control' },
-      { name: 'surrogate-control', label: 'surrogate-control' }
+      { name: 'cache-control', label: 'cache-control' }
     ];
     const res = watchHeaders.map(({name, label}) => {
       const values = cacheHeaders.filter(h => h.name === name).map(h => h.value) || [];
