@@ -20,15 +20,18 @@ chrome.webRequest.onHeadersReceived.addListener(
   ({url, responseHeaders}) => {
     const headerNames = [
       'cache-control',
+      'edge-control',
+      'surrogate-control',
       'x-nrk-outputcache-hit',
       'x-nrk-cache-hit',
       'x-nrk-cache',
+      'x-nrk-ec',
       'x-cache',
       'x-cache-key'
     ];
     const headers = responseHeaders
-      .filter(h => headerNames.includes(h.name))
-      .map(h => ({ name: h.name, value: h.value }));
+      .filter(h => headerNames.includes(h.name.toLowerCase()))
+      .map(h => ({ name: h.name.toLowerCase(), value: h.value }));
     // store so content script can paint result
     chrome.storage.sync.remove(['resCacheHeaders', 'programId']);
     if (headers.length) {
