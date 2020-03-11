@@ -30,7 +30,7 @@ waitForBody(() => {
   // log cache headers
   chrome.storage.sync.get(({resCacheHeaders}) => {
     const cacheHeaders = resCacheHeaders || [];
-    const res = [
+    const watchHeaders = [
       { name: 'x-nrk-outputcache-hit', label: 'output cache'},
       { name: 'x-nrk-cache-hit', label: 'output cache'},
       { name: 'x-nrk-cache', label: 'output cache'},
@@ -40,7 +40,8 @@ waitForBody(() => {
       { name: 'cache-control', label: 'cache-control' },
       { name: 'edge-control', label: 'edge-control' },
       { name: 'surrogate-control', label: 'surrogate-control' }
-    ].map(({name, label}) => {
+    ];
+    const res = watchHeaders.map(({name, label}) => {
       const values = cacheHeaders.filter(h => h.name === name).map(h => h.value) || [];
       return {
         style: getColor({label, value: values[0]}),
@@ -49,7 +50,7 @@ waitForBody(() => {
       }
     }).filter(h => !!h.values.length);
     // @ts-ignore
-    console.group(`%c[ToluExtension] %cCache Header Report:`, 'color: hotpink', '');
+    console.group(`%c[ToluExtension] %cCache Header Report: \n(${watchHeaders.map(h => h.name).join(', ')})`, 'color: hotpink', '');
     console.table(res.reduce((p, n) => {
       if (n.values.length > 1) {
         n.values.forEach((value, idx) => {
