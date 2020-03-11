@@ -47,7 +47,7 @@ waitForBody(() => {
         name,
         values
       }
-    });
+    }).filter(h => !!h.values.length);
     // @ts-ignore
     console.group(`%c[ToluExtension] %cCache Header Report:`, 'color: hotpink', '');
     console.table(res.reduce((p, n) => {
