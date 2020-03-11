@@ -32,6 +32,7 @@ waitForBody(() => {
     const cacheHeaders = resCacheHeaders || [];
     const res = [
       { name: 'x-nrk-outputcache-hit', label: 'output cache'},
+      { name: 'x-nrk-cache-hit', label: 'output cache'},
       { name: 'x-nrk-cache', label: 'output cache'},
       { name: 'x-cache', label: 'akamai' },
       { name: 'x-cache-key', label: 'akamai' },
