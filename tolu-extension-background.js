@@ -1,3 +1,9 @@
+const headerNames = [
+  'cache-control',
+  'x-cache',
+  'x-cache-key'
+];
+const nrkHeaderRegEx = /^(x-nrk-)/;
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.sync.set({color: '#3aa757'}, () => {
@@ -18,17 +24,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
 chrome.webRequest.onHeadersReceived.addListener(
   ({url, responseHeaders}) => {
-    const headerNames = [
-      'cache-control',
-      'x-nrk-outputcache-hit',
-      'x-nrk-cache-hit',
-      'x-nrk-cache',
-      'x-nrk-ec',
-      'x-cache',
-      'x-cache-key'
-    ];
     const headers = responseHeaders
-      .filter(h => headerNames.includes(h.name.toLowerCase()))
+      .filter(h => nrkHeaderRegEx.test(h.name) || headerNames.includes(h.name.toLowerCase()))
       .map(h => ({ name: h.name.toLowerCase(), value: h.value }));
     // store so content script can paint result
     chrome.storage.sync.remove(['resCacheHeaders', 'programId']);
